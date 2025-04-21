@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 
 def home_view(request):
-    return render(request, 'products/home.html')
+    products = Product.objects.all()
+    return render(request, 'products/home.html', {'products': products})
 
 
 def product_list_view(request):
@@ -34,11 +35,13 @@ def product_create_view(request):
 class ProductListView(ListView):
     model = Product
     template_name = 'products/product_list.html'
+    context_object_name = 'products'
 
 
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'products/product_detail.html'
+    context_object_name = 'product'
 
 
 class ProductCreateView(CreateView):
@@ -46,14 +49,22 @@ class ProductCreateView(CreateView):
     form_class = ProductForm
     template_name = 'products/product_form.html'
 
+    def get_success_url(self):
+        return reverse_lazy('product_list')
+
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'products/product_form.html'
 
+    def get_success_url(self):
+        return reverse_lazy('product_list')
+
 
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'products/product_confirm_delete.html'
-    success_url = reverse_lazy('product_list')
+
+    def get_success_url(self):
+        return reverse_lazy('product_list')

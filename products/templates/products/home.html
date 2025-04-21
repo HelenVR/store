@@ -5,5 +5,18 @@
 {% block content %}
 <h2>Welcome to My STORE!</h2>
 <p>This is the home page.</p>
-<a href="{% url 'product_list' %}">View Products</a>
+<a href="{% url 'product_list' %}">View Products</a><br>
+<a href="{% url 'product_create' %}">Add New Product</a><br>
+
+<h3>Existing Products:</h3>
+<ul>
+    {% for product in products %}
+        <li>
+            {{ product.name }} -
+            <a href="{% url 'product_update' product.id %}">Update</a> |
+            <a href="{% url 'product_delete' product.id %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+
 {% endblock %}
