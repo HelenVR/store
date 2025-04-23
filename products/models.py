@@ -1,5 +1,7 @@
 from django.db import models
 
+from tasks import notify_product_change
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -18,3 +20,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            action = 'updated'
+        else:
+            action = 'added'
+        super().save(*args, **kwargs)
+        notify_product_change.delay(self.name, action)
+
+    def delete(self, *args, **kwargs):
+        product_name = self.name
+        super().delete(*args, **kwargs)
+        notify_product_change.delay(product_name, 'removed')

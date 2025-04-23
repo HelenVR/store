@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'products',
     'crispy_forms',
-    'django_apscheduler'
+    'django_apscheduler',
+    'store'
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,14 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# settings.py
+
+CELERY_TASK_ROUTES = {
+    'store.tasks.add': 'low-priority',
+}
+CELERY_BROKER_URL = 'redis://10.16.40.98:6333'
+CELERY_RESULT_BACKEND = 'redis://10.16.40.98:6333'
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_EXCHANGE = 'default'
+CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
